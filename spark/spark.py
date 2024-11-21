@@ -1,15 +1,19 @@
-from typing import List, Union
+from typing import List, Optional
 import typer
 from rich import print
 import task
 import packet
 import config
 import os
+from typer_shell import make_typer_shell
+
+shell = make_typer_shell()
 
 app = typer.Typer()
 app.add_typer(task.app, name="task")
 app.add_typer(packet.app, name="packet")
 app.add_typer(config.app, name="config")
+app.add_typer(shell, name="shell")
 
 
 @app.command()
@@ -30,7 +34,7 @@ def init(path: str):
 
 @app.command()
 def test(tests: List[str], suites: List[str] = [],
-         loop: Union[int, None] = None, dryrun: bool = False):
+         loop: Optional[int] = None, dryrun: Optional[bool] = False):
     pass
 
 
