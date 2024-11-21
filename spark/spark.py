@@ -19,9 +19,13 @@ def about():
 
 @app.command(help="Create a new Spark project environment")
 def init(path: str):
-    reports = os.path.join(path, "reports")
-    if not os.path.exists(reports):
-        os.mkdir(reports)
+    print("[green]Creating new project[/green]")
+    os.makedirs(path, exist_ok=True)
+    cwd = os.getcwd()
+    os.chdir(path)
+    # TODO Create a new config file
+    os.makedirs("reports", exist_ok=True)
+    os.chdir(cwd)
 
 
 @app.command()
