@@ -4,15 +4,19 @@ app = typer.Typer()
 
 
 @app.command()
-def install():
+def install(packet, version: str):
     pass
 
 
 @app.command()
-def remove():
+def remove(packet):
     pass
 
 
 @app.command()
-def verify():
+def verify(packet, version: str):
+    pass
+
+@app.command()
+def list():
     pass
