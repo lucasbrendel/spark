@@ -1,9 +1,10 @@
 import sys
+from typing import Optional
 
 
 class SparkError(Exception):
 
-    def __init__(self, message=None, title=None, show_traceback=False):
+    def __init__(self, message: Optional[str] = None, title: Optional[str] = None, show_traceback=False):
         super().__init__(self, message)
         self._message = message
         self.title = title or self.title
