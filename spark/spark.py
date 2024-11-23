@@ -7,7 +7,7 @@ import config
 import os
 from typer_shell import make_typer_shell
 
-shell = make_typer_shell()
+shell = make_typer_shell(prompt=">>")
 
 app = typer.Typer()
 app.add_typer(task.app, name="task")
@@ -17,6 +17,7 @@ app.add_typer(shell, name="shell")
 
 
 @app.command()
+@shell.command()
 def about():
     print("Spark")
 
@@ -29,6 +30,7 @@ def init(path: str):
     os.chdir(path)
     # TODO Create a new config file
     os.makedirs("reports", exist_ok=True)
+    os.makedirs("plugins", exist_ok=True)
     os.chdir(cwd)
 
 
