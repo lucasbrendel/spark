@@ -1,5 +1,8 @@
 import sys
-from typing import Optional
+from typing import Dict, List, Optional
+
+from spark.config import Configuration
+from spark.env import Environment
 
 
 class SparkError(Exception):
@@ -20,11 +23,13 @@ class Interface():
 
 class ExtensionPoint(property):
 
-    def __init__(self, interface):
+    interface: Interface
+
+    def __init__(self, interface: Interface):
         property.__init__(self, self.extensions)
         self.interface = interface
 
-    def extensions(self, component):
+    def extensions(self, component: 'Component'):
         classes = ComponentMeta._registry.get(self.interface, ())
         components = [component.compmgr[cls] for cls in classes]
         return [c for c in components if c]
@@ -34,11 +39,11 @@ class ExtensionPoint(property):
 
 
 class ComponentMeta(type):
-    _components = []
-    _registry = {}
+    _components: List['Component'] = []
+    _registry: Dict[Interface, 'Component'] = {}
 
-    def __new__(mcs, name=None, bases=None, attributes=None):
-        new_class = type.__new__(mcs, name, bases, attributes)
+    def __new__(mcs, name: Optional[str] = None, bases=None, attributes=None):
+        new_class = super().__new__(mcs, name, bases, attributes)
         if name == "Component":
             return new_class
         if attributes.get('abstract'):
@@ -74,8 +79,8 @@ class ComponentMeta(type):
 
 class Component(metaclass=ComponentMeta):
 
-    env = None
-    config = None
+    env: Environment = None
+    config: Configuration = None
     log = None
 
     @property
@@ -100,16 +105,17 @@ implements = Component.implements
 
 class ComponentManager:
 
+    components: Dict[type, Component] = {}
+    enabled: Dict[Component, bool] = {}
+
     def __init__(self):
-        self.components = {}
-        self.enabled = {}
         if isinstance(self, Component):
             self.components[self.__class__] = self
 
-    def __contains__(self, cls):
+    def __contains__(self, cls: Component):
         return cls in self.components
 
-    def __getitem__(self, cls):
+    def __getitem__(self, cls: Component):
         if not self.is_enabled(cls):
             return None
 
@@ -124,19 +130,19 @@ class ComponentManager:
 
         return component
 
-    def is_enabled(self, cls):
+    def is_enabled(self, cls: Component):
         if cls not in self.enabled:
             self.enabled[cls] = self.is_component_enabled(cls)
         return self.enabled[cls]
 
-    def disable_component(self, component):
+    def disable_component(self, component: Component):
         if not isinstance(component, type):
             component = component.__class__
         self.enabled[component] = False
         self.components[component] = None
 
-    def component_activated(self, component):
+    def component_activated(self, component: Component):
         """Can be overriden for special init"""
 
-    def is_component_enabled(self, _cls):
+    def is_component_enabled(self, _cls: Component):
         return True
