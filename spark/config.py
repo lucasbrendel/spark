@@ -1,9 +1,10 @@
-from collections import OrderedDict
-from typing import Generator, List, Optional
-import typer
-from core import ComponentManager, ExtensionPoint
 import os
+from collections import OrderedDict
+from typing import Any, List, Optional
+
 import tomlkit
+import typer
+from core import ComponentManager
 
 app = typer.Typer()
 
@@ -11,12 +12,15 @@ app = typer.Typer()
 class Option:
 
     registry = {}
+    section: str
+    name: str
+    default: Any
 
     @staticmethod
     def get_registry(compmgr: Optional[ComponentManager] = None):
         return _get_registry(Option, compmgr)
 
-    def __init__(self, section, name, default=None, doc=''):
+    def __init__(self, section: str, name: str, default: Any = None, doc=''):
         self.section = section
         self.name = name
         self.default = default
@@ -151,6 +155,13 @@ def _get_registry(cls, compmgr: Optional[ComponentManager] = None):
 
 
 class BoolOption(Option):
+    pass
+
+
+class IntOption(Option):
+    pass
+
+class PathOption(Option):
     pass
 
 
