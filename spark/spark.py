@@ -1,10 +1,11 @@
+import os
 from typing import List, Optional
+
+import config
+import packet
+import task
 import typer
 from rich import print
-import task
-import packet
-import config
-import os
 from typer_shell import make_typer_shell
 
 shell = make_typer_shell(prompt=">>")
@@ -36,7 +37,18 @@ def init(path: str):
 
 @app.command()
 def test(tests: List[str], suites: List[str] = [],
-         loop: Optional[int] = None, dryrun: Optional[bool] = False):
+         loop: Optional[int] = None, dryrun: Optional[bool] = False,
+         skip_preflight: Optional[bool] = False, skip_cleanup: Optional[bool] = False):
+    pass
+
+
+@app.command(help="Restart the environment")
+def reload():
+    pass
+
+
+@app.command()
+def clear():
     pass
 
 
