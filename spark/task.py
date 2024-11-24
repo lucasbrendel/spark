@@ -1,6 +1,12 @@
 import typer
 
+from spark.core import Interface
+
 app = typer.Typer()
+
+
+class ITask(Interface):
+    pass
 
 
 @app.command()
