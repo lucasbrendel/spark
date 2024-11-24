@@ -1,5 +1,16 @@
 {
     "ruff.lineLength": 100,
     "ruff.lint.preview": true,
-    "ruff.format.preview": true
+    "ruff.format.preview": true,
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./test",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }
