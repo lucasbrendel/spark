@@ -1,6 +1,18 @@
 import typer
+from core import Interface
 
 app = typer.Typer()
+
+class IPacket(Interface):
+
+    def install(self, version:str):
+        pass
+
+    def remove(self):
+        pass
+
+    def verify(self, version:str):
+        pass
 
 
 @app.command()
