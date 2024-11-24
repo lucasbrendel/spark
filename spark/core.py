@@ -62,7 +62,7 @@ class ComponentMeta(type):
             return self
 
         compmgr = args[0]
-        self.compmgr.components.get(cls)
+        self = compmgr.components.get(cls)
         if self is None:
             self = cls.__new__(cls)
             self.compmgr = compmgr
