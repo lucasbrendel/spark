@@ -1,6 +1,6 @@
 import typer
 
-from sparky.core import Interface
+from sparky.base.core import Interface
 
 app = typer.Typer()
 

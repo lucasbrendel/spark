@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional
 
-import config
+import sparky.base.config as config
 import packet
 import task
 import typer
