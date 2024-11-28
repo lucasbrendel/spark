@@ -1,6 +1,6 @@
 import os
 from collections import OrderedDict
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import tomlkit
 import typer
@@ -27,7 +27,7 @@ class Option:
         self.registry[(self.section, self.name)] = self
         self.__doc__ = doc  # TODO cleandoc
 
-    def __get__(self, obj, option_type=None):
+    def __get__(self, obj: 'Option', option_type=None):
         if obj is None:
             return self
         config = getattr(obj, 'config', None)
@@ -36,7 +36,7 @@ class Option:
             return self.transform(value, config=config)
         return None
 
-    def __set__(self, obj, value):
+    def __set__(self, obj: 'Option', value):
         obj.config.set(self.section, self.name, value)
 
     def __repr__(self):
@@ -70,18 +70,19 @@ class Configuration():
 
     filename: str
     filenames: List[str]
+    params: Dict[str, Any]
 
-    def __init__(self, filename: str, params=None, create=False):
+    def __init__(self, filename: str, params: Dict[str, Any] = None, create=False):
         # TODO set logging
         self.params = params or {}
         self.filename = os.path.abspath(os.path.normpath(filename))
         with open(filename, 'rb') as toml:
             self.doc = tomlkit.parse(toml)
 
-    def __contains__(self, index):
+    def __contains__(self, index: str):
         return index in self.doc.keys()
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str):
         return self.doc[name]
 
     def __repr__(self):
@@ -89,6 +90,9 @@ class Configuration():
 
     def get(self, section: str, key: str, default=''):
         return self[section].get(key, default)
+
+    def get_bool(self, section: str, key: str, default=''):
+        return self[section].get_bool(key, default)
 
     def set(self, section: str, key: str, value):
         self.doc[section][key] = value
@@ -105,7 +109,7 @@ class Configuration():
         for option in self[section].options(compmgr):
             yield option
 
-    def remove(self, section, key):
+    def remove(self, section: str, key: str):
         self[section].remove(key)
 
     def section(self, compmgr: Optional[ComponentManager] = None, defaults=True):
@@ -160,6 +164,7 @@ class BoolOption(Option):
 
 class IntOption(Option):
     pass
+
 
 class PathOption(Option):
     pass
