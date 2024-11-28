@@ -193,7 +193,7 @@ wheels = [
 ]
 
 [[package]]
-name = "spark"
+name = "sparky"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

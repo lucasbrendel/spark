@@ -149,7 +149,7 @@ class Configuration():
 def _get_registry(cls, compmgr: Optional[ComponentManager] = None):
     if not compmgr:
         return cls.registry
-    from spark.core import ComponentMeta
+    from sparky.core import ComponentMeta
     components = {}
     for comp in ComponentMeta._components:
         for attr in comp.__dict__.itervalues():

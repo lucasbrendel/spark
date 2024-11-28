@@ -20,7 +20,7 @@ app.add_typer(shell, name="shell")
 @app.command()
 @shell.command()
 def about():
-    print("Spark")
+    print("Sparky")
 
 
 @app.command(help="Create a new Spark project environment")

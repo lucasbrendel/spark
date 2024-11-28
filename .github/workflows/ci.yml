@@ -29,5 +29,5 @@ jobs:
     - name: Ruff
       uses: astral-sh/ruff-action@v1.1.1
       with:
-          src: ./spark
+          src: ./sparky
 

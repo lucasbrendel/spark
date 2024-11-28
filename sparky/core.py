@@ -1,11 +1,11 @@
 import sys
 from typing import Dict, List, Optional
 
-from spark.config import Configuration
-from spark.env import Environment
+from sparky.config import Configuration
+from sparky.env import Environment
 
 
-class SparkError(Exception):
+class sparkyError(Exception):
 
     def __init__(self, message: Optional[str] = None, title: Optional[str] = None, show_traceback=False):
         super().__init__(self, message)
