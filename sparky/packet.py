@@ -1,9 +1,8 @@
 import typer
-from sparky.base.core import Interface
 
 app = typer.Typer()
 
-class IPacket(Interface):
+class IPacket():
 
     def install(self, version:str):
         pass

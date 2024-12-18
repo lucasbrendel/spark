@@ -1,11 +1,9 @@
 import typer
 
-from sparky.base.core import Interface
-
 app = typer.Typer()
 
 
-class ITask(Interface):
+class ITask():
     pass
 
 
