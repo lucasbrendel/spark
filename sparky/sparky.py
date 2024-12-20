@@ -1,13 +1,17 @@
 from typing import List, Optional
 
+import config
 import packet
 import task
 import typer
-import test
-import config
-
 from rich import print
+import rich.traceback
 from typer_shell import make_typer_shell
+
+import test
+
+# Make Rich be the stack trace handler
+rich.traceback.install(show_locals=True)
 
 shell = make_typer_shell(prompt=">>")
 
@@ -17,6 +21,7 @@ app.add_typer(packet.app, name="packet")
 app.add_typer(shell, name="shell")
 app.add_typer(test.app, name="test")
 app.add_typer(config.app, name="config")
+
 
 
 @app.command()
@@ -37,6 +42,10 @@ def reload():
 
 @app.command()
 def clear():
+    pass
+
+@app.command()
+def upgrade():
     pass
 
 
