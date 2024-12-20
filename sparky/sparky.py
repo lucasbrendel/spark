@@ -30,7 +30,7 @@ def about():
     print("Sparky")
 
 
-@app.command(help="Create a new Spark project environment")
+@app.command(help="Create a new Sparky project environment")
 def init(path: str):
     print("[green]Creating new project[/green]")
 
