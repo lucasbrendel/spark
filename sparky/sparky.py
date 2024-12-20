@@ -23,7 +23,6 @@ app.add_typer(test.app, name="test")
 app.add_typer(config.app, name="config")
 
 
-
 @app.command()
 @shell.command()
 def about():
@@ -43,6 +42,7 @@ def reload():
 @app.command()
 def clear():
     pass
+
 
 @app.command()
 def upgrade():
