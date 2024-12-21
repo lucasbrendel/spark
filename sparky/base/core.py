@@ -1,8 +1,8 @@
 import sys
 from typing import Dict, List, Optional
 
-from sparky.config import Configuration
 from sparky.base.env import Environment
+from sparky.config import Configuration
 
 
 class SparkyError(Exception):
