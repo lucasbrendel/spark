@@ -29,29 +29,29 @@ class ExtensionPoint(property):
         property.__init__(self, self.extensions)
         self.interface = interface
 
-    def extensions(self, component: 'Component'):
-        classes = ComponentMeta._registry.get(self.interface, ())
-        components = [component.compmgr[cls] for cls in classes]
-        return [c for c in components if c]
+    def extensions(self, module: 'Module'):
+        classes = ModuleMeta._registry.get(self.interface, ())
+        modules = [module.modmgr[cls] for cls in classes]
+        return [c for c in modules if c]
 
     def __repr__(self):
         return f"<ExtensionPoint {self.interface.__name__}>"
 
 
-class ComponentMeta(type):
-    _components: List['Component'] = []
-    _registry: Dict[Interface, 'Component'] = {}
+class ModuleMeta(type):
+    _modules: List['Module'] = []
+    _registry: Dict[Interface, 'Module'] = {}
 
     def __new__(mcs, name: Optional[str] = None, bases=None, attributes=None):
         new_class = super().__new__(mcs, name, bases, attributes)
-        if name == "Component":
+        if name == "Module":
             return new_class
         if attributes.get('abstract'):
             return new_class
 
-        ComponentMeta._components.append(new_class)
+        ModuleMeta._modules.append(new_class)
 
-        registry = ComponentMeta._registry
+        registry = ModuleMeta._registry
         for cls in new_class.__mro__:
             for interface in cls.__dict__.get("implements", ()):
                 classes = registry.setdefault(interface, [])
@@ -60,24 +60,24 @@ class ComponentMeta(type):
         return new_class
 
     def __call__(cls, *args, **kwds):
-        if issubclass(cls, ComponentManager):
+        if issubclass(cls, ModuleManager):
             self = cls.__new__(cls)
-            self.compmgr = self
+            self.modmgr = self
             self.__init__(*args, **kwds)
             return self
 
-        compmgr = args[0]
-        self = compmgr.components.get(cls)
+        modmgr = args[0]
+        self = modmgr.modules.get(cls)
         if self is None:
             self = cls.__new__(cls)
-            self.compmgr = compmgr
-            compmgr.component_activated(self)
+            self.modmgr = modmgr
+            modmgr.module_activated(self)
             self.__init__()
-            compmgr.components[cls] = self
+            modmgr.modules[cls] = self
         return self
 
 
-class Component(metaclass=ComponentMeta):
+class Module(metaclass=ModuleMeta):
 
     env: Environment = None
     config: Configuration = None
@@ -100,49 +100,49 @@ class Component(metaclass=ComponentMeta):
         locals.setdefault('_implements', []).extend(interfaces)
 
 
-implements = Component.implements
+implements = Module.implements
 
 
-class ComponentManager:
+class ModuleManager:
 
-    components: Dict[type, Component] = {}
-    enabled: Dict[Component, bool] = {}
+    modules: Dict[type, Module] = {}
+    enabled: Dict[Module, bool] = {}
 
     def __init__(self):
-        if isinstance(self, Component):
-            self.components[self.__class__] = self
+        if isinstance(self, Module):
+            self.modules[self.__class__] = self
 
-    def __contains__(self, cls: Component):
-        return cls in self.components
+    def __contains__(self, cls: Module):
+        return cls in self.modules
 
-    def __getitem__(self, cls: Component):
+    def __getitem__(self, cls: Module):
         if not self.is_enabled(cls):
             return None
 
-        component = self.components.get(cls)
-        if not component:
-            if cls not in ComponentMeta._components:
-                raise Exception(f"Component {cls.__name__} is not registered")
+        module = self.modules.get(cls)
+        if not module:
+            if cls not in ModuleMeta._modules:
+                raise Exception(f"Module {cls.__name__} is not registered")
             try:
-                component = cls(self)
+                module = cls(self)
             except TypeError as e:
-                raise Exception(f"Unable to create component ({cls}): {e}")
+                raise Exception(f"Unable to create module ({cls}): {e}")
 
-        return component
+        return module
 
-    def is_enabled(self, cls: Component):
+    def is_enabled(self, cls: Module):
         if cls not in self.enabled:
-            self.enabled[cls] = self.is_component_enabled(cls)
+            self.enabled[cls] = self.is_module_enabled(cls)
         return self.enabled[cls]
 
-    def disable_component(self, component: Component):
-        if not isinstance(component, type):
-            component = component.__class__
-        self.enabled[component] = False
-        self.components[component] = None
+    def disable_module(self, module: Module):
+        if not isinstance(module, type):
+            module = module.__class__
+        self.enabled[module] = False
+        self.modules[module] = None
 
-    def component_activated(self, component: Component):
+    def module_activated(self, module: Module):
         """Can be overriden for special init"""
 
-    def is_component_enabled(self, _cls: Component):
+    def is_module_enabled(self, _cls: Module):
         return True
