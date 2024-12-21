@@ -3,11 +3,7 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional
 
 import tomlkit
-import typer
 from sparky.base.core import ComponentManager
-
-app = typer.Typer()
-
 
 class Option:
 
@@ -167,19 +163,4 @@ class IntOption(Option):
 
 
 class PathOption(Option):
-    pass
-
-
-@app.command()
-def set():
-    pass
-
-
-@app.command()
-def list():
-    pass
-
-
-@app.command()
-def remove():
     pass

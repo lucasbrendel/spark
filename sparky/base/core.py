@@ -1,7 +1,7 @@
 import sys
 from typing import Dict, List, Optional
 
-from sparky.base.config import Configuration
+from sparky.config import Configuration
 from sparky.base.env import Environment
 
 
