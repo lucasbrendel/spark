@@ -1,7 +1,20 @@
 import sys
 from typing import Dict, List, Optional
 from logging import Logger
-# from config import Configuration
+from rich.logging import RichHandler
+
+
+class SparkyError(Exception):
+
+    def __init__(self, message: Optional[str] = None, title: Optional[str] = None, show_traceback=False):
+        super().__init__(self, message)
+        self._message = message
+        self.title = title or self.title
+        self.show_traceback = show_traceback
+
+    message = property(lambda self: self._message,
+                       lambda self, v: setattr(self, '_message', v))
+
 
 class Interface():
     pass
@@ -67,7 +80,7 @@ class Module(metaclass=ModuleMeta):
 
     # env: Environment = None
     config = None
-    log: Logger = None
+    log: RichHandler = None
 
     @property
     def fqname(self):
