@@ -5,7 +5,7 @@ from sparky.config import Configuration
 from sparky.base.env import Environment
 
 
-class sparkyError(Exception):
+class SparkyError(Exception):
 
     def __init__(self, message: Optional[str] = None, title: Optional[str] = None, show_traceback=False):
         super().__init__(self, message)
